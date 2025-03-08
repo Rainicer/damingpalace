@@ -235,9 +235,49 @@
         </article>
       
     </div>
+
     <script defer="" src="https://cloud.umami.is/script.js" data-website-id="ecafd05f-5770-457c-8f07-ff54b2678ec9"></script>
     <script src="https://widgets.coingecko.com/coingecko-coin-list-widget.js"></script>
     <coingecko-coin-list-widget coin-ids="bitcoin,ethereum,eos,ripple,litecoin" currency="usd" locale="en"></coingecko-coin-list-widget>
+    
+    
+    Groq对话：
+
+<input type="text" id="userInput" placeholder="输入你的问题" style="width: 300px; padding: 5px;" />
+<button onclick="sendToGroq()" style="padding: 5px 10px;">发送</button>
+<div id="response" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;"></div>
+
+<script>
+async function sendToGroq() {
+    const input = document.getElementById("userInput").value;
+    const responseDiv = document.getElementById("response");
+
+    responseDiv.innerText = "请求中...";
+
+    try {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer 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"
+            },
+            body: JSON.stringify({
+                messages: [
+                    { role: "system", content: "你是一个中文助手，请用中文回答所有问题。" },
+                    { role: "user", content: input }
+                ],
+                model: "llama3-8b-8192"
+            })
+        });
+
+        const data = await response.json();
+        const reply = data.choices[0].message.content;
+        responseDiv.innerText = reply || "无响应";
+    } catch (error) {
+        responseDiv.innerText = "错误: " + error.message;
+    }
+}
+</script>
   </div>
 </div>
 
